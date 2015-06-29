@@ -32,7 +32,7 @@ public class HashProcessor {
 		Socket socket = socketHash.get(id);
 		return socket;
 	}
-	public synchronized void registerSocket(String id, Socket socket){
+	public void registerSocket(String id, Socket socket){
 		HashMap<String,Socket> socketHash = ApplicationSockets.getSocketHash();
 		Socket sck = socketHash.get(id);
 		if(sck==null){

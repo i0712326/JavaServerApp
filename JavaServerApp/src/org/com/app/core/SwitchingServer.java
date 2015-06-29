@@ -26,7 +26,7 @@ public class SwitchingServer implements Runnable {
 	@Autowired
 	private MemberService memberService;
 	@Autowired
-	private DataHandler dataHandler;
+	private DataHandlerImp dataHandler;
 	@Autowired
 	private HashProcessor hashProcessor;
 	public void setPort(int port){
@@ -35,7 +35,7 @@ public class SwitchingServer implements Runnable {
 	public void setId(String id){
 		this.id = id;
 	}
-	public void setDataHandler(DataHandler dataHandler){
+	public void setDataHandler(DataHandlerImp dataHandler){
 		this.dataHandler = dataHandler;
 	}
 	public void setMemberService(MemberService memberService){
@@ -59,42 +59,12 @@ public class SwitchingServer implements Runnable {
 				// read data from socket
 				hashProcessor.registerSocket(iin, socket);
 				byte[] data = readData(socket);
-				logger.debug("");
 				if(data!=null){
 					ISOMsg isoMsg = new ISOMsg();
 					isoMsg.setPackager(packager);
 					isoMsg.unpack(data);
 					MsgUtil.printLogger(isoMsg);
 				}
-				/*if(data!=null){
-					Thread thread = new Thread(new Runnable(){
-						private Logger logger = Logger.getLogger(getClass());
-						private ISOPackager packager = PackagerFactory.getPackager();
-						@Override
-						public void run() {
-							try{
-							DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-							ISOMsg isoMsg = new ISOMsg();
-							isoMsg.setPackager(packager);
-							isoMsg.unpack(data);
-							logger.debug(">> Received Data Came from Port : "+socket.getLocalPort());
-							MsgUtil.printLogger(isoMsg);
-							isoMsg.setMTI("0810");
-							isoMsg.set(39, "00");
-							logger.debug("<< Send Data to Agent at Port : "+socket.getLocalPort());
-							MsgUtil.printLogger(isoMsg);
-							
-							byte[] msg = MsgUtil.appendHeader(isoMsg.pack());
-							dos.write(msg);
-							}
-							catch(IOException | ISOException e){
-								e.printStackTrace();
-							}
-						}
-					});
-					thread.start();
-				}*/
-				
 			}
 				/*
 				byte[] socketData = dataHandler.readSocketData();
